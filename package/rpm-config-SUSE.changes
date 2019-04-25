@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Apr 25 16:15:13 UTC 2019 - Michal Suchanek <msuchanek@suse.de>
+
+- Provide/require modules with .ko suffix (jsc#SLE-3853)
+
+-------------------------------------------------------------------
 Tue Mar  5 16:05:14 UTC 2019 - Michal Suchanek <msuchanek@suse.de>
 
 - Add automatic kernel module requires for module-load.d files
