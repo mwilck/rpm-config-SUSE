@@ -13,7 +13,7 @@ fi
 
 if ! $is_tumbleweed; then
     trap 'rm -f "$tmp"' EXIT
-    tmp=$(mktemp)
+    tmp=$(mktemp --suffix=.ko)
 fi
 
 
