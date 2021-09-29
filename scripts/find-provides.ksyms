@@ -51,16 +51,14 @@ while read f; do
     if $is_tumbleweed; then
         continue
     fi
-    unzip=""
     case "$f" in
     *.gz | */boot/vmlinuz*)
-        unzip="gzip -cd";;
+        gzip -cd "$f" > "$tmp"
+        f=$tmp;;
     *.xz)
-        unzip="xz -cd";;
+        xz -cd "$f" > "$tmp"
+        f=$tmp;;
     esac
-    if test -n "$unzip" && $unzip "$f" >"$tmp"; then
-        f=$tmp
-    fi
     if test -z "$flavor" -a -n "$is_module" ; then
         version=$(/sbin/modinfo -F vermagic "$f")
         version=${version%% *}
