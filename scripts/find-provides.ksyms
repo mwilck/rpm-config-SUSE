@@ -13,6 +13,21 @@ function read_builtin() {
         fi
 }
 
+# A KMP "provides" kabi(%name) = SHA"
+# where SHA is the sha256 sum over all ksyms it requires
+# This allows us to figure out modules that use the same ABI,
+# only one of them should be installed at any time.
+function print_kabi() {
+    local requires sha name
+
+    requires=$(${0%/*}/find-requires.ksyms "$1")
+    sha=$(echo "$requires" | sha256sum - | cut -c 1-64)
+    name=${1%-kmp-*}
+    # FIXME hack: strip kernel version
+    name=${name%-k6*}
+    printf "kabi(%s) = %s\n" "$name" "$sha"
+}
+
 while read f; do
     test -e "$f" || continue
     is_module=""
@@ -88,3 +103,11 @@ while read f; do
     fi
 done \
 | sort -u
+
+case $1 in
+    kernel-*)
+	;;
+    *)
+	print_kabi "$1"
+	;;
+esac
