@@ -1,5 +1,6 @@
 #! /bin/bash
 
+echo "$0: $$: $@" >&2
 case "$1" in
 kernel-module-*)    ;; # Fedora kernel module package names start with
                       # kernel-module.
@@ -25,6 +26,7 @@ while read f ; do
 		done < $f
 	esac
 done
+echo "$0: $$: ${#modules[@]}" >&2
 while read x ; do modsexp="$modsexp|$(basename "$x" .ko | tr '-' '_')" ; done << EOF
 	$(echo "${modules[@]}" | tr ' ' '\n')
 EOF
@@ -79,9 +81,12 @@ all_requires() {
     | sort -t $'\t' -k2 -u
 }
 
+echo "$0: $$: requires: $(wc -c <(all_requires "${modules[@]}"))" >&2
+echo "$0: $$:provides: $(wc -c <(all_provides "${modules[@]}"))" >&2
+
 if [ ${#modules[@]} -gt 0 ]; then
     symset_table=$(mktemp -t ${0##*/}.XXXXX)
-    /usr/lib/rpm/symset-table | sort -t $'\t' -k 1,1 > $symset_table
+    #/usr/lib/rpm/symset-table | sort -t $'\t' -k 1,1 > $symset_table
 
     join -t $'\t' -j 1 -a 2 $symset_table <(
 	# Filter out requirements that we fulfill ourself.
