@@ -100,6 +100,7 @@ cp -a macros.d %{buildroot}%{_rpmconfigdir}
 %{_rpmconfigdir}/find-provides.ksyms
 %{_rpmconfigdir}/find-requires.ksyms
 %{_rpmconfigdir}/find-supplements.ksyms
+%{_rpmconfigdir}/find-conflicts.ksyms
 
 %files reproducible-builds
 %{_rpmconfigdir}/macros.d/macros.reproducible-builds

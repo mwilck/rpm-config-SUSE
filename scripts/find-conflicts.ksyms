@@ -1,0 +1,22 @@
+#! /bin/bash
+
+function print_kabi() {
+    local requires sha name
+
+    requires=$(${0%/*}/find-requires.ksyms "$1")
+    sha=$(echo "$requires" | sha256sum - | cut -c 1-64)
+    name=${1%-kmp-*}
+    # FIXME hack: strip kernel version
+    name=${name%-k6*}
+    printf "kabi(%s) = %s\n" "$name" "$sha"
+}
+
+case $1 in
+    kernel-*)
+	cat >/dev/null
+	exit 0
+	;;
+    *)
+	print_kabi "$1"
+	;;
+esac
