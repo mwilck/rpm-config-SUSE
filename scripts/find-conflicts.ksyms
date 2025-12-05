@@ -4,7 +4,8 @@ function print_kabi() {
     local requires sha name
 
     requires=$(${0%/*}/find-requires.ksyms "$1")
-    echo "$1: $requires" >&2
+    echo "$0: $1: $(wc -c <<< "$requires")" >&2
+    [[ "$requires" ]] || return
     printf "kabipkg_%s\n" "$1"
     printf "kabilen = %s\n" "$(wc -c <<< "$requires")"
     #printf "kabistart = %s\n" "${requires:0:64}"
