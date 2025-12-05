@@ -21,6 +21,8 @@ function print_kabi() {
     local requires sha name
 
     requires=$(${0%/*}/find-requires.ksyms "$1")
+    printf "kabipkg_%s\n" "$1"
+    printf "kabilen = %s\n" "$(wc -c "$requires")"
     sha=$(echo "$requires" | sha256sum - | cut -c 1-64)
     name=${1%-kmp-*}
     # FIXME hack: strip kernel version
