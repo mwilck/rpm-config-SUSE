@@ -21,7 +21,7 @@ function print_kabi() {
     local requires sha name
 
     requires=$(${0%/*}/find-requires.ksyms "$1")
-    echo "$0: $1: $(wc -c <<< "$requires")" >&2
+    echo "$0: $1: $$: $(wc -c <<< "$requires")" >&2
     [[ "$requires" ]] || return
     printf "kabipkg_%s\n" "$1"
     printf "kabilen = %s\n" "$(wc -c <<< "$requires")"
@@ -31,6 +31,8 @@ function print_kabi() {
     name=${name%-k6*}
     printf "kabi(%s) = %s\n" "$name" "$sha"
 }
+
+STDIN=$(</dev/stdin)
 
 while read f; do
     test -e "$f" || continue
@@ -105,13 +107,13 @@ while read f; do
                             | sed -r -ne "s/^0*([0-9a-f]+) A __crc_(.+)/ksym($flavor:\\2) = \\1/p"
             fi
     fi
-done \
+done <<< "$STDIN" \
 | sort -u
 
 case $1 in
     kernel-*)
 	;;
     *)
-	print_kabi "$1"
+	print_kabi "$1" <<< "$STDIN"
 	;;
 esac
